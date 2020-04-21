@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace PaymentContext.Domain.Entities
 {
-    public class Subscription
+    public class Subscription : Entity
     {
         private IList<Payment> _payments;
 
