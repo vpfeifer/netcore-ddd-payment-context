@@ -7,7 +7,7 @@ namespace PaymentContext.Tests.Entities
     public class StudentTests
     {
         [TestMethod]
-        public void TestMethod1()
+        public void ShouldReturn()
         {
             
         }

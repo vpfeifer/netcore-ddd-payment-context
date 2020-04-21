@@ -10,24 +10,19 @@ namespace PaymentContext.Domain.ValueObjects
             Number = number;
             Type = type;
 
-            AddNotifications(new Contract()
-                .Requires()
-                .IsTrue(Validate(), "Document.Number", "Invalid document number.")
-            );
+            Validate();
         }
 
         public string  Number { get; private set; }
         public DocumentTypeEnum Type { get; private set; }
 
-        private bool Validate()
+        private void Validate()
         {
-            if (Type == DocumentTypeEnum.CNPJ && Number.Length == 14) 
-                return true;
+            if (Type == DocumentTypeEnum.CNPJ && Number.Length != 14) 
+                AddNotification("Document.Number", "Invalid CNPJ");
 
-            if (Type == DocumentTypeEnum.CPF && Number.Length == 11) 
-                return true;
-
-            return false;
+            if (Type == DocumentTypeEnum.CPF && Number.Length != 11) 
+                AddNotification("Document.Number", "Invalid CPF");
         }
     }
 }
