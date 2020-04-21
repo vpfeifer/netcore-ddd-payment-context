@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Flunt.Validations;
 
 namespace PaymentContext.Domain.Entities
 {
@@ -31,7 +32,15 @@ namespace PaymentContext.Domain.Entities
 
         public void AddPayment(Payment payment)
         {
-            _payments.Add(payment);
+            AddNotifications(new Contract()
+                .Requires()
+                .IsGreaterThan(DateTime.Now, payment.PaidDate, "Subscription.Payments", "The paid date must be greater than current date.")
+            );
+
+            if (Valid)
+            {
+                _payments.Add(payment);
+            }
         }
 
         public void Activate()

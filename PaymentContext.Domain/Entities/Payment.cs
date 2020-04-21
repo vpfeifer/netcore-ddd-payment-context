@@ -1,4 +1,5 @@
 using System;
+using Flunt.Validations;
 using PaymentContext.Domain.ValueObjects;
 
 namespace PaymentContext.Domain.Entities
@@ -8,10 +9,7 @@ namespace PaymentContext.Domain.Entities
         protected Payment(DateTime paidDate, DateTime expiredDate, decimal total, 
                          decimal totalPaid, string payer, Document document, Address address)
         {
-            Number = Guid.NewGuid().ToString()
-                            .Replace("-", "")
-                            .Substring(0, 10)
-                            .ToUpper();
+            Number = new PaymentNumber();
             PaidDate = paidDate;
             ExpiredDate = expiredDate;
             Total = total;
@@ -19,9 +17,15 @@ namespace PaymentContext.Domain.Entities
             Payer = payer;
             Document = document;
             Address = address;
+
+            AddNotifications(new Contract()
+                .Requires()
+                .IsGreaterThan(0, Total, "Payment.Total", "The payment total must be greather than zero.")
+                .IsGreaterThan(TotalPaid, Total, "Payment.TotalPaid", "The total paid cannot be greater than payment total.")
+            );
         }
 
-        public string Number { get; private set; }
+        public PaymentNumber Number { get; private set; }
         public DateTime PaidDate { get; private set; }
         public DateTime ExpiredDate { get; private set; }
         public decimal Total { get; private set; }
